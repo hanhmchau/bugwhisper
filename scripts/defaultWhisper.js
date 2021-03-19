@@ -13,6 +13,7 @@ const defaultWhisper = (command, match, chatData, createOptions, customWhisperFu
 			const names = match[2].replace(/[\[\]]/g, "").split(",").map(n => n.trim());
 			const matchedTargets = names.map(name => customGetWhisperRecipients(name));
 			users = matchedTargets.flatMap(target => target.users);
+			console.warn(users);
 			const matchedNames = matchedTargets.flatMap(target => target.names);
 			message = match[3];
 			customWhisperFunction(chatData, matchedNames, createOptions);

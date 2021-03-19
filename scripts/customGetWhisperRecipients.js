@@ -24,7 +24,7 @@ export default function (name) {
 		};
 	}
 
-	return [];
+	return { users: [], names: [] };
 }
 
 const tryGetUsers = (name) => {
@@ -49,14 +49,14 @@ const tryGetUsers = (name) => {
 const tryGetPrimaryCharacter = (name) => {
 	const lname = name.toLowerCase();
 
-	let actor = game.users.entities.find((a) => a.character && a.character.name.toLowerCase() === lname);
+	let actor = game.users.entities.find((a) => a.character && a.character.name.toLowerCase().includes(lname));
 	return actor;
 };
 
 const tryGetActors = (name) => {
 	const lname = name.toLowerCase();
 
-	return game.actors.entities.find((a) => a.data.name.toLowerCase() === lname);
+	return game.actors.entities.find((a) => a.data.name.toLowerCase().includes(lname));
 };
 
 const getOwnersOf = (actor) => {
