@@ -1,3 +1,5 @@
+import customGetWhisperRecipients from "./customGetWhisperRecipients.js";
+
 const defaultWhisper = (command, match, chatData, createOptions, customWhisperFunction) => {
 	// Prepare whisper data
 	chatData.type = CONST.CHAT_MESSAGE_TYPES.WHISPER;
@@ -8,10 +10,12 @@ const defaultWhisper = (command, match, chatData, createOptions, customWhisperFu
 	let message = "";
 	switch (command) {
 		case "whisper":
-            const names = match[2].replace(/[\[\]]/g, "").split(",").map(n => n.trim());
-			users = names.reduce((arr, n) => arr.concat(ChatMessage.getWhisperRecipients(n)), []);
+			const names = match[2].replace(/[\[\]]/g, "").split(",").map(n => n.trim());
+			const matchedTargets = names.map(name => customGetWhisperRecipients(name));
+			users = matchedTargets.flatMap(target => target.users);
+			const matchedNames = matchedTargets.flatMap(target => target.names);
 			message = match[3];
-            customWhisperFunction(chatData, names, createOptions);
+			customWhisperFunction(chatData, matchedNames, createOptions);
             break;
 		case "reply":
 			message = match[2];
@@ -25,11 +29,11 @@ const defaultWhisper = (command, match, chatData, createOptions, customWhisperFu
 			break;
 		case "gm":
 			message = match[2];
-			users = ChatMessage.getWhisperRecipients("gm");
+			users = customGetWhisperRecipients("gm").users;
 			break;
 		case "players":
 			message = match[2];
-			users = ChatMessage.getWhisperRecipients("players");
+			users = customGetWhisperRecipients("players").users;
 			break;
 	}
 
